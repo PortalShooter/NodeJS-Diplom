@@ -1,8 +1,7 @@
-// TODO types id
 export interface ReservationDto {
-  userId: string | number;
-  hotelId: string | number;
-  roomId: string | number;
+  userId: string;
+  hotelId: string;
+  roomId: string;
   dateStart: string;
   dateEnd: string;
 }

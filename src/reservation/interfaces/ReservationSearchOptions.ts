@@ -1,6 +1,5 @@
-//TODO type id
 export interface ReservationSearchOptions {
-  userId: string | number;
+  userId: string;
   dateStart: Date;
   dateEnd: Date;
 }
