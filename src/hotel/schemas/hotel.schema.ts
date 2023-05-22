@@ -8,9 +8,6 @@ export class Hotel {
   @Prop({ required: true })
   public title: Types.ObjectId;
 
-  @Prop({ required: true, unique: true })
-  public email: string;
-
   @Prop()
   public description: string;
 
