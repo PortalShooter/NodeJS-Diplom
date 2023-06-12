@@ -7,7 +7,15 @@ import {
 import { UserService } from 'src/user/user.service';
 // import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateUserDtoResponse,
+} from 'src/user/dto/create-user.dto';
+import {
+  LoginUserDtoRequest,
+  LoginUserDtoResponse,
+} from 'src/user/dto/login.dto';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -15,11 +23,17 @@ export class AuthService {
     private userService: UserService, // private JwtService: JwtService,
   ) {}
 
-  async login(email, pass) {
-    const user = await this.userService.getUserByEmail(email);
-    if (user?.passwordHash !== pass) {
-      throw new UnauthorizedException();
-    }
+  async login(userDto: LoginUserDtoRequest): Promise<LoginUserDtoResponse> {
+    const user = await this.validateUser(userDto);
+    const { contactPhone, email, name } = user;
+    //TODO - генерировать токен или точнее реализовать авторизацию с помощью passport.js
+    return {
+      email,
+      name,
+      contactPhone,
+    };
+
+    // return this.generateToken(user)
     // const payload = { sub: user.userId, username: user.username };
     // return {
     //   access_token: await this.jwtService.signAsync(payload),
@@ -30,7 +44,7 @@ export class AuthService {
     return 'Hello World!';
   }
 
-  async register(userDto: CreateUserDto) {
+  async register(userDto: CreateUserDto): Promise<CreateUserDtoResponse> {
     const { email } = userDto;
     const candidate = await this.userService.getUserByEmail(email);
     if (candidate) {
@@ -46,7 +60,7 @@ export class AuthService {
       ...userDto,
       password: hashPassword,
     });
-    console.log('createUser', createUser);
+
     if (createUser) {
       return {
         id: createUser.id,
@@ -59,6 +73,21 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  private async validateUser(userDto: LoginUserDtoRequest): Promise<User> {
+    const user = await this.userService.getUserByEmail(userDto.email);
+    const passwordEquals = await bcrypt.compare(
+      userDto.password,
+      user.passwordHash,
+    );
+    if (user && passwordEquals) {
+      return user;
+    }
+    throw new UnauthorizedException({
+      message:
+        'Пользователя с указанным email не существует или пароль неверный',
+    });
   }
 
   // private async generateToken(user: User) {
