@@ -1,8 +1,5 @@
 import { IUser } from './IUser';
 import { SearchUserParams } from './SearchUserParams';
-
-//TODO уточнить type id
-//TODO создать все сервисы
 export interface IUserService {
   create(data: Partial<IUser>): Promise<IUser>;
   findById(id: string | number): Promise<IUser>;

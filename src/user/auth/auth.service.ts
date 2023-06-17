@@ -31,7 +31,7 @@ export class AuthService {
 
   async register(userDto: CreateUserDto): Promise<CreateUserDtoResponse> {
     const { email } = userDto;
-    const candidate = await this.userService.getUserByEmail(email);
+    const candidate = await this.userService.findByEmail(email);
     if (candidate) {
       throw new HttpException(
         'Пользователь с таким email существует',
@@ -39,11 +39,11 @@ export class AuthService {
       );
     }
 
-    const hashPassword = await bcrypt.hash(userDto.password, 5);
+    const passwordHash: string = await bcrypt.hash(userDto.password, 5);
 
-    const createUser = await this.userService.createUser({
+    const createUser = await this.userService.create({
       ...userDto,
-      password: hashPassword,
+      passwordHash,
     });
 
     if (createUser) {
@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   async validateUser(userDto: LoginUserDtoRequest): Promise<IUser> {
-    const user = await this.userService.getUserByEmail(userDto.email);
+    const user = await this.userService.findByEmail(userDto.email);
     const passwordEquals = await bcrypt.compare(
       userDto.password,
       user.passwordHash,

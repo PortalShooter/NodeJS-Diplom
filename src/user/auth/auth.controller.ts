@@ -35,15 +35,15 @@ export class AuthController {
         email: user.email,
         name: user.name,
         contactPhone: user.contactPhone,
-        token: token,
       });
   }
 
   @ApiOperation({ summary: 'Выход' })
   @Post('/auth/logout')
-  logout() {
-    //TODO - add body
-    return this.authService.logout();
+  logout(@Res({ passthrough: true }) res: Response) {
+    // TODO - Доступно только аутентифицированным пользователям.
+    // return this.authService.logout();
+    res.clearCookie('access_token').send({});
   }
 
   @ApiOperation({ summary: 'Регистрация пользователя' })
