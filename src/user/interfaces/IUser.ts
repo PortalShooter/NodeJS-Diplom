@@ -7,7 +7,7 @@ export interface IUser {
   role: Role;
 }
 
-enum Role {
+export enum Role {
   'client',
   'admin',
   'manager',

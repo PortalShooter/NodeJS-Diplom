@@ -1,24 +1,42 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  CreateUserDto,
-  CreateUserDtoResponse,
-} from 'src/user/dto/create-user.dto';
+import { Request, Response } from 'express';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
 @Controller('api')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Вход' })
   @Post('/auth/login')
-  login(@Body() body: LoginUserDtoRequest) {
-    return this.authService.login({
+  async login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: LoginUserDtoRequest,
+  ): Promise<void> {
+    const { user, token } = await this.authService.login({
       email: body.email,
       password: body.password,
     });
+
+    res
+      .cookie('access_token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+      })
+      .send({
+        email: user.email,
+        name: user.name,
+        contactPhone: user.contactPhone,
+        token: token,
+      });
   }
 
   @ApiOperation({ summary: 'Выход' })
