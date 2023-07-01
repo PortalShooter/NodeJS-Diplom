@@ -6,4 +6,3 @@ export interface IUserService {
   findByEmail(email: string): Promise<IUser>;
   findAll(params: SearchUserParams): Promise<IUser[]>;
 }
-//TODO При поиске IUserService.findAll() поля email, name и contactPhone должны проверяться на частичное совпадение.

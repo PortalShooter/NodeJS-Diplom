@@ -1,33 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { IUser } from './interfaces/IUser';
+import { SearchUserParams } from './interfaces/SearchUserParams';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
-  async create(userDto: Partial<IUser>) {
+  create(data: Partial<IUser>) {
     const user = new this.UserModel({
-      ...userDto,
-      passwordHash: userDto.passwordHash,
+      ...data,
+      passwordHash: data.passwordHash,
     });
     return user.save();
   }
 
-  async findByEmail(email: string) {
-    const user = await this.UserModel.findOne({ email });
-    return user;
+  findById(id: ObjectId): Promise<IUser> {
+    return this.UserModel.findById({ id });
   }
 
-  async findById(id: string) {
-    const user = await this.UserModel.findById({ id });
-    return user;
+  findByEmail(email: string): Promise<IUser> {
+    return this.UserModel.findOne({ email });
   }
 
-  async findAll() {
-    const user = await this.UserModel.find();
-    return user;
+  //TODO При поиске IUserService.findAll() поля email, name и contactPhone должны проверяться на частичное совпадение.
+  findAll(params: SearchUserParams): Promise<IUser[]> {
+    return this.UserModel.find();
   }
 }

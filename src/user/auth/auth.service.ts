@@ -70,10 +70,10 @@ export class AuthService {
       return {
         contactPhone: user.contactPhone,
         email: user.email,
-        id: user._id,
+        id: user.id,
         name: user.name,
         passwordHash: user.passwordHash,
-        role: Role[user.role],
+        role: user.role,
       };
     }
     return null;
