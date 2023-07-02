@@ -1,8 +1,8 @@
-import { HotelRoom } from './HotelRoom';
+import { IHotelRoom } from './IHotelRoom';
 import { SearchRoomsParams } from './SearchRoomsParams';
 export interface HotelRoomService {
-  create(data: Partial<HotelRoom>): Promise<HotelRoom>;
-  findById(id: string): Promise<HotelRoom>;
-  search(params: SearchRoomsParams): Promise<HotelRoom[]>;
-  update(id: string, data: Partial<HotelRoom>): Promise<HotelRoom>;
+  create(data: Partial<IHotelRoom>): Promise<IHotelRoom>;
+  findById(id: string): Promise<IHotelRoom>;
+  search(params: SearchRoomsParams): Promise<IHotelRoom[]>;
+  update(id: string, data: Partial<IHotelRoom>): Promise<IHotelRoom>;
 }

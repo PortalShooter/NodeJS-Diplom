@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { HotelModule } from './hotel/hotel.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { SupportChatModule } from './support-chat/support-chat.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SupportChatModule } from './support-chat/support-chat.module';
     HotelModule,
     ReservationModule,
     SupportChatModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
