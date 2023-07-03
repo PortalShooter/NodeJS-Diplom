@@ -7,7 +7,7 @@ import {
   CreateUserDtoResponse,
 } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
-import { IUser, Role } from '../interfaces/IUser';
+import { IUser } from '../interfaces/IUser';
 
 @Injectable()
 export class AuthService {
@@ -67,16 +67,12 @@ export class AuthService {
       user.passwordHash,
     );
     if (user && passwordEquals) {
-      return {
-        contactPhone: user.contactPhone,
-        email: user.email,
-        id: user.id,
-        name: user.name,
-        passwordHash: user.passwordHash,
-        role: user.role,
-      };
+      return user;
     }
-    return null;
+    throw new HttpException(
+      'Неправильный логин или пароль',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   createToken(user: IUser) {

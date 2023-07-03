@@ -78,7 +78,6 @@ export class HotelRoomService {
   }
 
   update(id: string, data: Partial<HotelRoom>): Promise<HotelRoom> {
-    //TODO создать новые пути для файлов. Потом обновить бд.
     return this.HotelRoomModel.findByIdAndUpdate(
       id,
       {

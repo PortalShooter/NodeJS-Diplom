@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '../interfaces/IUser';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })
@@ -9,6 +10,12 @@ export class CreateUserDto {
   readonly name: string;
   @ApiProperty({ example: '89892249531', description: 'Номер телефона' })
   readonly contactPhone: string;
+  @ApiProperty({
+    example: 'admin',
+    description: 'Роль пользователя',
+    required: false,
+  })
+  readonly role: Role;
 }
 
 export class CreateUserDtoResponse {

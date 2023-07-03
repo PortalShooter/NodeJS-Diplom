@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../user.service';
-import { IUser, Role } from '../interfaces/IUser';
+import { IUser } from '../interfaces/IUser';
 import { SearchUserParams } from '../interfaces/SearchUserParams';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { RoleGuard } from '../auth/guards/role.guard';
+import { AuthService } from '../auth/auth.service';
 
 // @Injectable()
 // export class FileExtender implements NestInterceptor {
@@ -20,24 +19,33 @@ import { RoleGuard } from '../auth/guards/role.guard';
 @ApiTags('Управление пользователями')
 @Controller('api')
 export class ApiUser {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post('admin/users/')
   addUser(@Body() body: IUser) {
-    return this.userService.create(body);
+    return this.authService.register({
+      ...body,
+      password: body.passwordHash,
+      role: body.role,
+    });
   }
 
-  @Roles('admin')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOperation({ summary: 'Получение списка пользователей' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Получение списка пользователей админом' })
   @Get('admin/users/')
-  getUsers(@Query() query: SearchUserParams) {
-    try {
-      return this.userService.findAll(query);
-    } catch (e) {
-      return e;
-    }
+  getUsersAdmin(@Query() query: SearchUserParams) {
+    return this.userService.findAll(query);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Получение списка пользователей менеджером' })
+  @Get('manager/users/')
+  getUsersManagement(@Query() query: SearchUserParams) {
+    return this.userService.findAll(query);
   }
 }

@@ -7,7 +7,6 @@ export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   matchRoles(roles: string[], userRole: string) {
-    console.log(roles, userRole);
     return roles.some((role) => role === userRole);
   }
 
@@ -15,7 +14,6 @@ export class RoleGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    console.log(123);
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
       return true;

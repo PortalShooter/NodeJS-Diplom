@@ -10,10 +10,7 @@ export class UserService {
   constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
   create(data: Partial<IUser>) {
-    const user = new this.UserModel({
-      ...data,
-      passwordHash: data.passwordHash,
-    });
+    const user = new this.UserModel(data);
     return user.save();
   }
 

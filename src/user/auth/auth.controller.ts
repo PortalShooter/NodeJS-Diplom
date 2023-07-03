@@ -34,13 +34,13 @@ export class AuthController {
         email: user.email,
         name: user.name,
         contactPhone: user.contactPhone,
-        token,
       });
   }
 
   @ApiOperation({ summary: 'Выход' })
   @Post('/auth/logout')
-  logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    console.log(req.cookies);
     // TODO - Доступно только аутентифицированным пользователям.
     // return this.authService.logout();
     res.clearCookie('access_token').send({});

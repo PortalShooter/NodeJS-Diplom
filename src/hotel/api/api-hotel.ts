@@ -7,6 +7,7 @@ import {
   Put,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { HotelRoomService, HotelService } from '../hotel.service';
@@ -18,6 +19,7 @@ import { FileService } from 'src/file/file.service';
 import { omit } from 'lodash';
 import { query } from 'express';
 import { SearchRoomsParams } from '../interfaces/SearchRoomsParams';
+import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 
 // @Injectable()
 // export class FileExtender implements NestInterceptor {
@@ -38,7 +40,7 @@ export class ApiHotel {
     private readonly fileService: FileService,
   ) {}
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  // @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Добавление гостиницы' })
   @Post('admin/hotels/')
   addHotel(@Body() body: UpdateHotelParams) {
