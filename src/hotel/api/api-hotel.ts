@@ -1,11 +1,7 @@
 import {
   Body,
-  CallHandler,
   Controller,
-  ExecutionContext,
   Get,
-  Injectable,
-  NestInterceptor,
   Param,
   Post,
   Put,
@@ -18,7 +14,6 @@ import { ApiOperation, ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UpdateHotelParams } from '../interfaces/UpdateHotelParams';
 import { SearchHotelParams } from '../interfaces/SearchHotelParams';
 import { FilesInterceptor } from '@nestjs/platform-express/multer';
-import { Observable } from 'rxjs';
 import { FileService } from 'src/file/file.service';
 import { omit } from 'lodash';
 import { query } from 'express';
