@@ -25,10 +25,6 @@ export class AuthService {
     };
   }
 
-  logout(): string {
-    return 'Hello World!';
-  }
-
   async register(userDto: CreateUserDto): Promise<CreateUserDtoResponse> {
     const { email } = userDto;
     const candidate = await this.userService.findByEmail(email);
@@ -73,6 +69,11 @@ export class AuthService {
       'Неправильный логин или пароль',
       HttpStatus.BAD_REQUEST,
     );
+  }
+
+  getUserByToken(token: string) {
+    const { sub } = this.jwtService.verify(token);
+    return this.userService.findById(sub);
   }
 
   createToken(user: IUser) {

@@ -40,21 +40,21 @@ export class ApiHotel {
     private readonly fileService: FileService,
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Добавление гостиницы' })
   @Post('admin/hotels/')
   addHotel(@Body() body: UpdateHotelParams) {
     return this.hotelService.create(body);
   }
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Получение списка гостиниц' })
   @Get('admin/hotels')
   getHostelList(@Query() query: SearchHotelParams) {
     return this.hotelService.search(query);
   }
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Изменение описания гостиницы' })
   @Put('admin/hotels/:id')
   updateHostelDescription(
@@ -64,7 +64,7 @@ export class ApiHotel {
     return this.hotelService.update(id, query);
   }
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Добавление номера' })
   @Post('admin/hotel-rooms/')
   @ApiConsumes('multipart/form-data')
@@ -122,7 +122,7 @@ export class ApiHotel {
     return this.hotelRoomService.findById(id);
   }
 
-  //TODO role admin добавить проверку и ответы 401 и 403
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Изменение описания номера' })
   @Put('admin/hotel-rooms/:id')
   @ApiConsumes('multipart/form-data')

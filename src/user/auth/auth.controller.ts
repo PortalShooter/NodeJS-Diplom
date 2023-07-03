@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -41,9 +49,14 @@ export class AuthController {
   @Post('/auth/logout')
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     console.log(req.cookies);
-    // TODO - Доступно только аутентифицированным пользователям.
-    // return this.authService.logout();
-    res.clearCookie('access_token').send({});
+    if (req.cookies?.access_token) {
+      res.clearCookie('access_token').send({});
+    } else {
+      throw new HttpException(
+        'Пользователь не аутентифицирован',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @ApiOperation({ summary: 'Регистрация пользователя' })

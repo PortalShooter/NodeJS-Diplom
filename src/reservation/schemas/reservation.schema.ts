@@ -15,9 +15,6 @@ export class Reservation {
   public roomId: Types.ObjectId;
 
   @Prop({ required: true })
-  public name: string;
-
-  @Prop({ required: true })
   public dateStart: Date;
 
   @Prop({ required: true })

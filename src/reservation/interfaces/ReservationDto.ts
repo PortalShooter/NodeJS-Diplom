@@ -4,7 +4,7 @@ export class ReservationDto {
   @ApiProperty({ example: '', description: 'id пользователя' })
   userId: string;
   @ApiProperty({ example: '', description: 'id отеля' })
-  hotelId: string;
+  hotelId?: string;
   @ApiProperty({ example: '', description: 'id комнаты' })
   roomId: string;
   @ApiProperty({ example: '', description: 'Дата начала брони' })
