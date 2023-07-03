@@ -26,7 +26,7 @@ export class HotelService {
   }
 
   findById(id: ObjectId): Promise<Hotel> {
-    return this.HotelModel.findById({ id });
+    return this.HotelModel.findById(id);
   }
   // TODO
   search(params: SearchHotelParams) /*: Promise<IHotel[]>*/ {
@@ -71,7 +71,7 @@ export class HotelRoomService {
 
   findById(id: string): Promise<HotelRoom> {
     if (isValidObjectId(id)) {
-      return this.HotelRoomModel.findById({ id });
+      return this.HotelRoomModel.findById(id);
     } else {
       throw new HttpException('Некорректный id', HttpStatus.BAD_REQUEST);
     }

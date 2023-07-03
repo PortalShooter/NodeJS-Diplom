@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { IUser } from './interfaces/IUser';
 import { SearchUserParams } from './interfaces/SearchUserParams';
 
@@ -17,8 +17,8 @@ export class UserService {
     return user.save();
   }
 
-  findById(id: ObjectId): Promise<IUser> {
-    return this.UserModel.findById({ id });
+  findById(id: string): Promise<IUser> {
+    return this.UserModel.findById(id);
   }
 
   findByEmail(email: string): Promise<IUser> {

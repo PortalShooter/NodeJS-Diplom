@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ReservationService } from '../reservation.service';
 import { ReservationDto } from '../interfaces/ReservationDto';
 
-@ApiTags('Reservation')
+@ApiTags('Бронирование')
 @Controller('api')
 export class ApiReservation {
   constructor(private readonly reservationService: ReservationService) {}

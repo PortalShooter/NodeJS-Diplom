@@ -11,13 +11,15 @@ import { LocalStrategy } from './strategies/local.strategy';
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
+
+  exports: [JwtModule, AuthService],
 })
 export class AuthModule {}

@@ -1,17 +1,16 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
 @Controller('api')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Вход' })
   @Post('/auth/login')
   async login(
@@ -35,6 +34,7 @@ export class AuthController {
         email: user.email,
         name: user.name,
         contactPhone: user.contactPhone,
+        token,
       });
   }
 

@@ -3,6 +3,7 @@ import { ReservationService } from './reservation.service';
 import { ReservationController } from './reservation.controller';
 import { Reservation, ReservationSchema } from './schemas/reservation.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ApiReservation } from './api/api-reservation';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
   ],
   providers: [ReservationService],
-  controllers: [ReservationController],
+  controllers: [ReservationController, ApiReservation],
 })
 export class ReservationModule {}
