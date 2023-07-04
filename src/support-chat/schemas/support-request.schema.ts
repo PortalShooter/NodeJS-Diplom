@@ -6,16 +6,18 @@ export type SupportRequestDocument = SupportRequest & Document;
 
 @Schema()
 export class SupportRequest {
+  public id: string;
+
   @Prop({ required: true })
   public user: Types.ObjectId;
 
   @Prop({ required: true })
   public createdAt: Date;
 
-  @Prop()
+  @Prop({ default: [] })
   public messages: Message[];
 
-  @Prop()
+  @Prop({ default: false })
   public isActive: boolean;
 }
 

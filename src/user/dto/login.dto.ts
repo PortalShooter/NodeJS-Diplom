@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class LoginUserDtoRequest {
   @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })
   readonly email: string;
-  @ApiProperty({ example: '********', description: 'Пароль' })
+  @ApiProperty({ example: 'string', description: 'Пароль' })
   readonly password: string;
 }
 

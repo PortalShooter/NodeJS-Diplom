@@ -14,7 +14,7 @@ export class Message {
   @Prop({ required: true })
   public text: string;
 
-  @Prop({ required: true })
+  @Prop()
   public readAt: Date;
 }
 

@@ -7,6 +7,8 @@ import {
   SupportRequest,
   SupportRequestSchema,
 } from './schemas/support-request.schema';
+import { ApiSupportChat } from './api/api-support-chat';
+import { AuthModule } from 'src/user/auth/auth.module';
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import {
     MongooseModule.forFeature([
       { name: SupportRequest.name, schema: SupportRequestSchema },
     ]),
+    AuthModule,
   ],
   providers: [SupportChatService],
-  controllers: [SupportChatController],
+  controllers: [SupportChatController, ApiSupportChat],
 })
 export class SupportChatModule {}

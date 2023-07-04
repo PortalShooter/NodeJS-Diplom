@@ -15,7 +15,7 @@ export class IUser {
 }
 
 export enum Role {
-  'client',
-  'admin',
-  'manager',
+  client = 'client',
+  admin = 'admin',
+  manager = 'manager',
 }
