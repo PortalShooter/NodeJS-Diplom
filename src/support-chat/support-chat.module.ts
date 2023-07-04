@@ -9,6 +9,7 @@ import {
 } from './schemas/support-request.schema';
 import { ApiSupportChat } from './api/api-support-chat';
 import { AuthModule } from 'src/user/auth/auth.module';
+// import { ChatGateway } from './gateway/chat.gateway';
 
 @Module({
   imports: [
