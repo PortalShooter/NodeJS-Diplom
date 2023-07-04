@@ -58,6 +58,12 @@ export class AuthService {
 
   async validateUser(userDto: LoginUserDtoRequest): Promise<IUser> {
     const user = await this.userService.findByEmail(userDto.email);
+    if (!user) {
+      throw new HttpException(
+        'Такого email не существует',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const passwordEquals = await bcrypt.compare(
       userDto.password,
       user.passwordHash,
