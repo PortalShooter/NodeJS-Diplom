@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, isValidObjectId } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Hotel, HotelDocument } from './schemas/hotel.schema';
 import { HotelRoom, HotelRoomDocument } from './schemas/hotel-room.schema';
 import { UpdateHotelParams } from './interfaces/UpdateHotelParams';
 import { SearchHotelParams } from './interfaces/SearchHotelParams';
-import { IHotel } from './interfaces/IHotel';
 import { SearchRoomsParams } from './interfaces/SearchRoomsParams';
 
 @Injectable()
@@ -25,20 +24,20 @@ export class HotelService {
     return hotel.save();
   }
 
-  findById(id: ObjectId): Promise<Hotel> {
+  findById(id: string): Promise<Hotel> {
     return this.HotelModel.findById(id);
   }
-  // TODO
-  search(params: SearchHotelParams) /*: Promise<IHotel[]>*/ {
+
+  search(params: SearchHotelParams): Promise<Hotel[]> {
     return this.HotelModel.find(
-      /*{ title: params.title }*/ {},
+      {},
       { id: true, title: true, description: true },
     )
       .skip(params.offset)
       .limit(params.limit);
   }
 
-  update(id: string, data: UpdateHotelParams): Promise<IHotel> {
+  update(id: string, data: UpdateHotelParams): Promise<Hotel> {
     return this.HotelModel.findByIdAndUpdate(
       id,
       {

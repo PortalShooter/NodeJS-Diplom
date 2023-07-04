@@ -15,6 +15,7 @@ import { Request } from 'express';
 import { AddReservationDto } from '../interfaces/AddReservationDto';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 import { AuthService } from 'src/user/auth/auth.service';
+import { HotelRoomService, HotelService } from 'src/hotel/hotel.service';
 
 @ApiTags('Бронирование')
 @Controller('api')
@@ -22,6 +23,8 @@ export class ApiReservation {
   constructor(
     private readonly reservationService: ReservationService,
     private authService: AuthService,
+    private hotelRoomService: HotelRoomService,
+    private hotelService: HotelService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -37,12 +40,26 @@ export class ApiReservation {
           400,
         );
       }
-      return this.reservationService.addReservation({
+      const reservation = await this.reservationService.addReservation({
         dateEnd: dto.dateEnd,
         dateStart: dto.dateStart,
         userId: user.id,
         roomId: dto.hotelRoom,
       });
+
+      const hotelRoom = await this.hotelRoomService.getDetailInfoRoom(
+        reservation.roomId.toString(),
+      );
+
+      return {
+        startDate: reservation.dateStart,
+        endDate: reservation.dateEnd,
+        hotelRoom: {
+          description: hotelRoom.description,
+          images: hotelRoom.images,
+        },
+        hotel: hotelRoom.hotel,
+      };
     }
   }
 

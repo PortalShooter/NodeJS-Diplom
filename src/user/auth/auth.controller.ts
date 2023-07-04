@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
 
@@ -60,7 +60,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiResponse({ status: 200 })
   @Post('/client/register')
-  register(@Body() body: CreateUserDto) {
-    return this.authService.register(body);
+  register(@Req() req: Request, @Body() body: CreateUserDto) {
+    if (!req.cookies?.access_token) {
+      return this.authService.register(body);
+    }
+    throw new HttpException(
+      'Пользователь аутентифицирован',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }

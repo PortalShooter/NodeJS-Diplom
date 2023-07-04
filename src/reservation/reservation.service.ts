@@ -25,17 +25,16 @@ export class ReservationService {
       dateEnd: data.dateEnd,
     });
     await reservation.save();
-    //TODO - почему то не работает развертывание
-    reservation.populate('roomId', 'description images');
-    reservation.populate('hotelId', 'title description');
     return reservation;
   }
 
   getReservations(
     /*filter: ReservationSearchOptions*/ userId: string,
   ): Promise<Array<IReservation>> {
-    //TODO - возвращать требуемый формат
-    return this.reservationModel.find({ userId });
+    return this.reservationModel
+      .find({ userId }, { userId: false })
+      .populate('hotelId', 'title description')
+      .populate('roomId', 'images description');
   }
 
   getReservationsById(id: string): Promise<IReservation> {

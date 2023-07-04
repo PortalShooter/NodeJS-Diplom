@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Model, ObjectId, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { IUser } from './interfaces/IUser';
 import { SearchUserParams } from './interfaces/SearchUserParams';
 
@@ -24,6 +24,16 @@ export class UserService {
 
   //TODO При поиске IUserService.findAll() поля email, name и contactPhone должны проверяться на частичное совпадение.
   findAll(params: SearchUserParams): Promise<IUser[]> {
-    return this.UserModel.find();
+    return this.UserModel.find(
+      {},
+      // { $text: { $search: params.email ?? '' } },
+      // {
+      //   filter: {
+      //     email: { $regex: /^``/ },
+      //     // as: 'item',
+      //     // cond: { $gte: ['$$item.price', 100] },
+      //   },
+      // },
+    );
   }
 }

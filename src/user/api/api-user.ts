@@ -16,12 +16,18 @@ export class ApiUser {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post('admin/users/')
-  addUser(@Body() body: IUser) {
-    return this.authService.register({
+  async addUser(@Body() body: IUser) {
+    const user = await this.authService.register({
       ...body,
       password: body.passwordHash,
       role: body.role,
     });
+
+    return {
+      ...user,
+      contactPhone: body.contactPhone,
+      role: body.role,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
