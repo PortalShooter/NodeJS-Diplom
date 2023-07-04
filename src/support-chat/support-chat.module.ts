@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SupportChatService } from './support-chat.service';
-import { SupportChatController } from './support-chat.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Message, MessageSchema } from './schemas/message.schema';
 import {
@@ -20,6 +19,6 @@ import { AuthModule } from 'src/user/auth/auth.module';
     AuthModule,
   ],
   providers: [SupportChatService],
-  controllers: [SupportChatController, ApiSupportChat],
+  controllers: [ApiSupportChat],
 })
 export class SupportChatModule {}

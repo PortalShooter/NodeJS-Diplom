@@ -40,14 +40,16 @@ export class SupportChatService {
       .limit(params.limit);
   }
 
-  sendMessage(data: SendMessageDto): Promise<Message> {
-    // Как я понимаю при создании сообщения мне также надо его добавить в SupportRequest?
-    // Хотя при этом написано, что вернуть я должен промис самого сообщения
-    return new this.messageModel({
+  async sendMessage(data: SendMessageDto): Promise<Message> {
+    const newMessage = await new this.messageModel({
       author: data.author,
       sentAt: new Date(),
       text: data.text,
-    }).save();
+    });
+    this.supportRequestModel.findByIdAndUpdate(data.supportRequest, {
+      $push: { messages: newMessage.id },
+    });
+    return newMessage.save();
   }
 
   markMessagesAsRead(params: MarkMessagesAsReadDto) {
