@@ -8,12 +8,14 @@ import {
 } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
 import { IUser } from '../interfaces/IUser';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async login(userDto: LoginUserDtoRequest) {
@@ -35,7 +37,10 @@ export class AuthService {
       );
     }
 
-    const passwordHash: string = await bcrypt.hash(userDto.password, 5);
+    const passwordHash: string = await bcrypt.hash(
+      userDto.password,
+      this.configService.get('KeyHashPassword'),
+    );
 
     const createUser = await this.userService.create({
       ...userDto,
