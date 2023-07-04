@@ -16,11 +16,11 @@ export class ReservationService {
 
   async addReservation(data: ReservationDto): Promise<Reservation> {
     const { roomId } = data;
-    const hotelRoom = await this.hotelRoomService.findById(roomId);
+    const hotelRoom = await this.hotelRoomService.getDetailInfoRoom(roomId);
     const reservation = new this.reservationModel({
       userId: data.userId,
       roomId: data.roomId,
-      hotelId: hotelRoom.hotel,
+      hotelId: hotelRoom.hotel.id,
       dateStart: data.dateStart,
       dateEnd: data.dateEnd,
     });

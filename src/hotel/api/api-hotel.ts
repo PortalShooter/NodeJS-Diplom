@@ -33,7 +33,7 @@ import { Role } from 'src/user/interfaces/IUser';
 //   }
 // }
 
-@ApiTags('Hotel')
+@ApiTags('Отель')
 @Controller('api')
 export class ApiHotel {
   constructor(
@@ -46,13 +46,18 @@ export class ApiHotel {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Добавление гостиницы' })
   @Post('admin/hotels/')
-  addHotel(@Body() body: UpdateHotelParams) {
-    return this.hotelService.create(body);
+  async addHotel(@Body() body: UpdateHotelParams) {
+    const hotel = await this.hotelService.create(body);
+    return {
+      id: hotel.id,
+      title: body.title,
+      description: body.description,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Получение списка гостиниц' })
-  @Get('admin/hotels')
+  @Get('admin/hotels/')
   getHostelList(@Query() query: SearchHotelParams) {
     return this.hotelService.search(query);
   }
@@ -87,7 +92,6 @@ export class ApiHotel {
       },
     },
   })
-  // @UseInterceptors(FileExtender)
   @UseInterceptors(FilesInterceptor('images'))
   async addHotelRoom(
     @UploadedFiles() images: Array<Express.Multer.File>,
@@ -103,11 +107,17 @@ export class ApiHotel {
       images: imagesPath,
     });
 
-    return hotelRoom;
+    return {
+      id: hotelRoom.id,
+      description: hotelRoom.description,
+      images: hotelRoom.images,
+      isEnabled: hotelRoom.isEnabled,
+      hotel: hotelRoom.hotel,
+    };
   }
 
   @ApiOperation({ summary: 'Поиск номеров' })
-  @Get('common/hotel-rooms')
+  @Get('common/hotel-rooms/')
   async findHotelRooms(@Req() req: Request, @Query() query: SearchRoomsParams) {
     let isEnabled = false;
     const { hotel, limit, offset } = query;
@@ -131,7 +141,7 @@ export class ApiHotel {
   @ApiOperation({ summary: 'Информация о конкретном номере' })
   @Get('common/hotel-rooms/:id')
   getInfoHotelRoom(@Param('id') id: string) {
-    return this.hotelRoomService.findById(id);
+    return this.hotelRoomService.getDetailInfoRoom(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -148,17 +158,26 @@ export class ApiHotel {
         images: {
           type: 'array',
           items: {
-            type: 'string | File',
+            type: 'string',
             format: 'binary',
           },
         },
       },
     },
   })
+  @UseInterceptors(FilesInterceptor('images'))
   updateHostelRoomDescription(
     @Param('id') id: string,
-    @Body() query: UpdateHotelParams,
+    @Body() query,
+    @UploadedFiles() images: Array<Express.Multer.File>,
   ) {
-    return this.hotelRoomService.update(id, query);
+    const imagesPath = images.map((image) =>
+      this.fileService.createFile(image),
+    );
+    return this.hotelRoomService.update(id, {
+      ...query,
+      hotel: query.hotelId,
+      images: imagesPath,
+    });
   }
 }

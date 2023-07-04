@@ -6,6 +6,8 @@ export type HotelRoomDocument = HotelRoom & Document;
 
 @Schema()
 export class HotelRoom {
+  public id: string;
+
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: Hotel.name })
   public hotel: Types.ObjectId;
 

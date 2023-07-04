@@ -41,7 +41,11 @@ export class HotelService {
   update(id: string, data: UpdateHotelParams): Promise<IHotel> {
     return this.HotelModel.findByIdAndUpdate(
       id,
-      { title: data.title, description: data.description },
+      {
+        title: data.title,
+        description: data.description,
+        updatedAt: new Date(),
+      },
       { projection: { id: true, title: true, description: true }, new: true },
     );
   }
@@ -69,9 +73,12 @@ export class HotelRoomService {
     return hotelRoom.populate('hotel', 'id title description');
   }
 
-  findById(id: string): Promise<HotelRoom> {
+  getDetailInfoRoom(id: string): Promise<HotelRoom> {
     if (isValidObjectId(id)) {
-      return this.HotelRoomModel.findById(id);
+      return this.HotelRoomModel.findById(id).populate(
+        'hotel',
+        'id title description',
+      );
     } else {
       throw new HttpException('Некорректный id', HttpStatus.BAD_REQUEST);
     }
@@ -82,9 +89,10 @@ export class HotelRoomService {
       id,
       {
         description: data.description,
-        images: data.images,
+        $push: { images: { $each: data.images } },
         isEnabled: data.isEnabled,
         hotel: data.hotel,
+        updatedAt: new Date(),
       },
       {
         projection: {
@@ -106,6 +114,6 @@ export class HotelRoomService {
     )
       .skip(params.offset)
       .limit(params.limit)
-      .populate('hotel', 'id title description');
+      .populate('hotel', 'id title');
   }
 }
