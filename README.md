@@ -6,6 +6,12 @@ npm install
 
 ## Running the app
 
+Перед запуском сервера необходимо запустить докер
+```bash
+# development
+$ docker-compose up
+```
+
 ```bash
 # development
 $ npm run start
@@ -19,4 +25,4 @@ $ npm run start:prod
 
 ## Swagger
 
-<http://localhost:3000/api/>
+<http://localhost:(PORT)/api/>
