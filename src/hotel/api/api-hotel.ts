@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -16,10 +17,11 @@ import { UpdateHotelParams } from '../interfaces/UpdateHotelParams';
 import { SearchHotelParams } from '../interfaces/SearchHotelParams';
 import { FilesInterceptor } from '@nestjs/platform-express/multer';
 import { FileService } from 'src/file/file.service';
-import { omit } from 'lodash';
-import { query } from 'express';
 import { SearchRoomsParams } from '../interfaces/SearchRoomsParams';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
+import { Request } from 'express';
+import { AuthService } from 'src/user/auth/auth.service';
+import { Role } from 'src/user/interfaces/IUser';
 
 // @Injectable()
 // export class FileExtender implements NestInterceptor {
@@ -38,6 +40,7 @@ export class ApiHotel {
     private readonly hotelService: HotelService,
     private readonly hotelRoomService: HotelRoomService,
     private readonly fileService: FileService,
+    private readonly authService: AuthService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -105,14 +108,23 @@ export class ApiHotel {
 
   @ApiOperation({ summary: 'Поиск номеров' })
   @Get('common/hotel-rooms')
-  findHotelRooms(@Query() query: SearchRoomsParams) {
+  async findHotelRooms(@Req() req: Request, @Query() query: SearchRoomsParams) {
+    let isEnabled = false;
     const { hotel, limit, offset } = query;
-    //TODO добавить проверку на роль пользователя
+    const token = req.cookies.access_token;
+    if (!token) {
+      isEnabled = true;
+    } else {
+      const user = await this.authService.getUserByToken(token);
+      if (user.role === Role.client) {
+        isEnabled = true;
+      }
+    }
     return this.hotelRoomService.search({
       hotel,
       limit,
       offset,
-      isEnabled: true,
+      isEnabled,
     });
   }
 
@@ -149,11 +161,4 @@ export class ApiHotel {
   ) {
     return this.hotelRoomService.update(id, query);
   }
-
-  // TODO под вопросом, нужен ли он вообще?
-  // @ApiOperation({ summary: 'Поиск гостиниц' })
-  // @Get('common/hotel-rooms')
-  // searchHotels(@Query() query: SearchHotelParams) {
-  //   return this.hotelService.search(query);
-  // }
 }

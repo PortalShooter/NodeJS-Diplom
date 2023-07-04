@@ -5,17 +5,6 @@ import { IUser } from '../interfaces/IUser';
 import { SearchUserParams } from '../interfaces/SearchUserParams';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthService } from '../auth/auth.service';
-
-// @Injectable()
-// export class FileExtender implements NestInterceptor {
-//   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-//     const req = context.switchToHttp().getRequest();
-//     req.file['description'] = req.body.comment;
-//     req.file['hotelId'] = req.body.outletId;
-//     return next.handle();
-//   }
-// }
-
 @ApiTags('Управление пользователями')
 @Controller('api')
 export class ApiUser {

@@ -13,7 +13,7 @@ import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
 
-@ApiTags('Auth')
+@ApiTags('Авторизация')
 @Controller('api')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -22,7 +22,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Вход' })
   @Post('/auth/login')
   async login(
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Body() body: LoginUserDtoRequest,
   ): Promise<void> {
@@ -48,7 +47,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Выход' })
   @Post('/auth/logout')
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    console.log(req.cookies);
     if (req.cookies?.access_token) {
       res.clearCookie('access_token').send({});
     } else {

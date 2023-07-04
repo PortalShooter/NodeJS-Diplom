@@ -1,12 +1,11 @@
 import { ExecutionContext, HttpException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private authrService: AuthService) {
+  constructor(private authService: AuthService) {
     super();
   }
 
@@ -23,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         //   '401',
         // );
       }
-      const user = await this.authrService.getUserByToken(token);
+      const user = await this.authService.getUserByToken(token);
 
       if (necessaryRole == 'common') {
         return true;
