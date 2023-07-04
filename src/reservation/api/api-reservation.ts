@@ -61,21 +61,34 @@ export class ApiReservation {
   @Delete('client/reservations/:id')
   async deleteReservationByUser(@Req() req: Request, @Param('id') id: string) {
     const token = req.cookies.access_token;
-    const reservation = this.reservationService.getReservationsById(id);
+    const user = await this.authService.getUserByToken(token);
+    const reservation = await this.reservationService.getReservationsById(id);
     if (!reservation) {
       throw new HttpException('Брони с указанным ID не существует', 400);
+    } else if (reservation.userId !== user.id) {
+      throw new HttpException(
+        'ID текущего пользователя не совпадает с ID пользователя в брони',
+        403,
+      );
     }
-    //TODO проверить если ли id брони у данного клиента, если нет, то возвращаем 403
-
-    const user = await this.authService.getUserByToken(token);
-    console.log(user);
-    return this.reservationService.getReservations(user.id);
+    return this.reservationService.removeReservation(reservation.id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Список броней текущего пользователя' })
+  @ApiOperation({ summary: 'Список броней конкретного пользователя' })
   @Get('manager/reservations/:userId')
   async getUserReservationManagement(@Param('userId') userId: string) {
     return this.reservationService.getReservations(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Отмена бронирования менеджером' })
+  @Delete('manager/reservations/:id')
+  async deleteReservationByManagement(@Param('id') id: string) {
+    const reservation = await this.reservationService.getReservationsById(id);
+    if (!reservation) {
+      throw new HttpException('Брони с указанным ID не существует', 400);
+    }
+    return this.reservationService.removeReservation(reservation.id);
   }
 }

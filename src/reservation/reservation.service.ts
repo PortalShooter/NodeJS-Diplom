@@ -4,7 +4,6 @@ import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 import { Model } from 'mongoose';
 import { ReservationDto } from './interfaces/ReservationDto';
 import { HotelRoomService } from 'src/hotel/hotel.service';
-import { ReservationSearchOptions } from './interfaces/ReservationSearchOptions';
 import { IReservation } from './interfaces/IReservation';
 
 @Injectable()
@@ -43,5 +42,8 @@ export class ReservationService {
     return this.reservationModel.findById(id);
   }
 
-  removeReservation(id: string) /*: Promise<void>*/ {}
+  removeReservation(id: string): Promise<void> {
+    this.reservationModel.findByIdAndDelete(id);
+    return;
+  }
 }
