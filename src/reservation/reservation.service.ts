@@ -16,7 +16,7 @@ export class ReservationService {
 
   async addReservation(data: ReservationDto): Promise<Reservation> {
     const { roomId } = data;
-    const hotelRoom = await this.hotelRoomService.getDetailInfoRoom(roomId);
+    const hotelRoom = await this.hotelRoomService.findById(roomId);
     const reservation = new this.reservationModel({
       userId: data.userId,
       roomId: data.roomId,

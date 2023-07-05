@@ -6,9 +6,12 @@ import { HotelRoom, HotelRoomDocument } from './schemas/hotel-room.schema';
 import { UpdateHotelParams } from './interfaces/UpdateHotelParams';
 import { SearchHotelParams } from './interfaces/SearchHotelParams';
 import { SearchRoomsParams } from './interfaces/SearchRoomsParams';
+import { IHotelService } from './interfaces/IHotelService';
+import { IHotelRoomService } from './interfaces/IHotelRoomService';
+import { ID } from 'src/types';
 
 @Injectable()
-export class HotelService {
+export class HotelService implements IHotelService {
   constructor(
     @InjectModel(Hotel.name) private HotelModel: Model<HotelDocument>,
   ) {}
@@ -51,15 +54,15 @@ export class HotelService {
 }
 
 @Injectable()
-export class HotelRoomService {
+export class HotelRoomService implements IHotelRoomService {
   constructor(
     @InjectModel(HotelRoom.name)
-    private HotelRoomModel: Model<HotelRoomDocument>,
+    private hotelRoomModel: Model<HotelRoomDocument>,
   ) {}
 
   async create(data: Partial<HotelRoom>): Promise<HotelRoom> {
     const dateNow = new Date();
-    const hotelRoom = new this.HotelRoomModel({
+    const hotelRoom = new this.hotelRoomModel({
       hotel: data.hotel,
       description: data.description,
       createdAt: dateNow,
@@ -72,45 +75,47 @@ export class HotelRoomService {
     return hotelRoom.populate('hotel', 'id title description');
   }
 
-  getDetailInfoRoom(id: string): Promise<HotelRoom> {
+  findById(id: ID): Promise<HotelRoom> {
     if (isValidObjectId(id)) {
-      return this.HotelRoomModel.findById(id).populate(
-        'hotel',
-        'id title description',
-      );
+      return this.hotelRoomModel
+        .findById(id)
+        .populate('hotel', 'id title description');
     } else {
       throw new HttpException('Некорректный id', HttpStatus.BAD_REQUEST);
     }
   }
 
   update(id: string, data: Partial<HotelRoom>): Promise<HotelRoom> {
-    return this.HotelRoomModel.findByIdAndUpdate(
-      id,
-      {
-        description: data.description,
-        $push: { images: { $each: data.images } },
-        isEnabled: data.isEnabled,
-        hotel: data.hotel,
-        updatedAt: new Date(),
-      },
-      {
-        projection: {
-          id: true,
-          title: true,
-          description: true,
-          images: true,
-          hotel: true,
+    return this.hotelRoomModel
+      .findByIdAndUpdate(
+        id,
+        {
+          description: data.description,
+          $push: { images: { $each: data.images } },
+          isEnabled: data.isEnabled,
+          hotel: data.hotel,
+          updatedAt: new Date(),
         },
-        new: true,
-      },
-    ).populate('hotel', 'id title description');
+        {
+          projection: {
+            id: true,
+            title: true,
+            description: true,
+            images: true,
+            hotel: true,
+          },
+          new: true,
+        },
+      )
+      .populate('hotel', 'id title description');
   }
 
   search(params: SearchRoomsParams): Promise<HotelRoom[]> {
-    return this.HotelRoomModel.find(
-      { hotel: params.hotel },
-      { id: true, description: true, images: true },
-    )
+    return this.hotelRoomModel
+      .find(
+        { hotel: params.hotel },
+        { id: true, description: true, images: true },
+      )
       .skip(params.offset)
       .limit(params.limit)
       .populate('hotel', 'id title');

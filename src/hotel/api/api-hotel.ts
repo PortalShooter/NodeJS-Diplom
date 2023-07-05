@@ -141,7 +141,7 @@ export class ApiHotel {
   @ApiOperation({ summary: 'Информация о конкретном номере' })
   @Get('common/hotel-rooms/:id')
   getInfoHotelRoom(@Param('id') id: string) {
-    return this.hotelRoomService.getDetailInfoRoom(id);
+    return this.hotelRoomService.findById(id);
   }
 
   @UseGuards(JwtAuthGuard)

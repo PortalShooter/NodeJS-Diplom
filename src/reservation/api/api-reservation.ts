@@ -47,7 +47,7 @@ export class ApiReservation {
         roomId: dto.hotelRoom,
       });
 
-      const hotelRoom = await this.hotelRoomService.getDetailInfoRoom(
+      const hotelRoom = await this.hotelRoomService.findById(
         reservation.roomId.toString(),
       );
 
