@@ -1,11 +1,12 @@
-import { IReservation } from './IReservation';
+import { ID } from 'src/types';
+import { Reservation } from '../schemas/reservation.schema';
 import { ReservationDto } from './ReservationDto';
 import { ReservationSearchOptions } from './ReservationSearchOptions';
 
 export interface IReservationService {
-  addReservation(data: ReservationDto): Promise<IReservation>;
-  removeReservation(id: string): Promise<void>;
+  addReservation(data: ReservationDto): Promise<Reservation>;
+  removeReservation(id: ID): Promise<void>;
   getReservations(
     filter: ReservationSearchOptions,
-  ): Promise<Array<IReservation>>;
+  ): Promise<Array<Reservation>>;
 }

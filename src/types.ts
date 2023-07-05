@@ -1,2 +1,2 @@
-import { Schema as MongooseSchema } from 'mongoose';
-export type ID = string | MongooseSchema.Types.ObjectId;
+import { Types } from 'mongoose';
+export type ID = string | Types.ObjectId;

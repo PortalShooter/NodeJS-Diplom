@@ -69,7 +69,11 @@ export class ApiReservation {
   async getAllReservationByUser(@Req() req: Request) {
     const token = req.cookies.access_token;
     const user = await this.authService.getUserByToken(token);
-    return this.reservationService.getReservations(user.id);
+    return this.reservationService.getReservations({
+      userId: user.id,
+      dateEnd: undefined,
+      dateStart: undefined,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -94,7 +98,11 @@ export class ApiReservation {
   @ApiOperation({ summary: 'Список броней конкретного пользователя' })
   @Get('manager/reservations/:userId')
   async getUserReservationManagement(@Param('userId') userId: string) {
-    return this.reservationService.getReservations(userId);
+    return this.reservationService.getReservations({
+      userId: userId,
+      dateEnd: undefined,
+      dateStart: undefined,
+    });
   }
 
   @UseGuards(JwtAuthGuard)

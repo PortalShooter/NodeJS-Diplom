@@ -7,19 +7,18 @@ import {
   CreateUserDtoResponse,
 } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
-import { IUser } from '../interfaces/IUser';
-import { ConfigService } from '@nestjs/config';
+import { User } from '../schemas/user.schema';
+import { Role } from '../interfaces/IUser';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private configService: ConfigService,
   ) {}
 
   async login(userDto: LoginUserDtoRequest) {
-    const user: IUser = await this.validateUser(userDto);
+    const user: User = await this.validateUser(userDto);
     const token: string = this.createToken(user);
     return {
       token,
@@ -41,6 +40,7 @@ export class AuthService {
 
     const createUser = await this.userService.create({
       ...userDto,
+      role: Role.client,
       passwordHash,
     });
 
@@ -58,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async validateUser(userDto: LoginUserDtoRequest): Promise<IUser> {
+  async validateUser(userDto: LoginUserDtoRequest): Promise<User> {
     const user = await this.userService.findByEmail(userDto.email);
     if (!user) {
       throw new HttpException(
@@ -84,7 +84,7 @@ export class AuthService {
     return this.userService.findById(sub);
   }
 
-  createToken(user: IUser) {
+  createToken(user: User) {
     const payload = { username: user.name, sub: user.id };
     return this.jwtService.sign(payload);
   }

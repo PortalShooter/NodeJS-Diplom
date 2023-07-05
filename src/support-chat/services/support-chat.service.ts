@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSupportRequestDto } from '../interfaces/CreateSupportRequestDto';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   SupportRequest,
@@ -9,7 +8,7 @@ import { Model, Types } from 'mongoose';
 import { SearchSupportRequestststs } from '../interfaces/SearchSupportRequests';
 import { Message, MessageDocument } from '../schemas/message.schema';
 import { SendMessageDto } from '../interfaces/SendMessageDto';
-import { MarkMessagesAsReadDto } from '../interfaces/MarkMessagesAsReadDto';
+import { ID } from 'src/types';
 
 @Injectable()
 export class SupportChatService {
@@ -21,7 +20,7 @@ export class SupportChatService {
   ) {}
 
   findAllSupportRequestByUser(
-    id: string,
+    id: ID,
     params: SearchSupportRequestststs,
   ): Promise<SupportRequest[]> {
     return this.supportRequestModel

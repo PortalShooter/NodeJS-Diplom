@@ -5,6 +5,8 @@ export type ReservationDocument = Reservation & Document;
 
 @Schema()
 export class Reservation {
+  public id: Types.ObjectId;
+
   @Prop({ required: true })
   public userId: Types.ObjectId;
 

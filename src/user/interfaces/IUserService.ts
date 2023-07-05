@@ -1,8 +1,8 @@
-import { IUser } from './IUser';
+import { User } from '../schemas/user.schema';
 import { SearchUserParams } from './SearchUserParams';
 export interface IUserService {
-  create(data: Partial<IUser>): Promise<IUser>;
-  findById(id: string | number): Promise<IUser>;
-  findByEmail(email: string): Promise<IUser>;
-  findAll(params: SearchUserParams): Promise<IUser[]>;
+  create(data: Partial<User>): Promise<User>;
+  findById(id: string | number): Promise<User>;
+  findByEmail(email: string): Promise<User>;
+  findAll(params: SearchUserParams): Promise<User[]>;
 }

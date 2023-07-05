@@ -11,9 +11,9 @@ export class CreateUserDto {
   @ApiProperty({ example: '89892249531', description: 'Номер телефона' })
   readonly contactPhone: string;
   @ApiProperty({
-    example: 'admin',
     description: 'Роль пользователя',
     required: false,
+    default: Role.client,
   })
   readonly role: Role;
 }

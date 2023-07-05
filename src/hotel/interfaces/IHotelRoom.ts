@@ -1,9 +1,11 @@
+import { ID } from 'src/types';
+
 export interface IHotelRoom {
-  id: string;
-  hotel: string;
+  id: ID;
+  hotel: ID;
   description: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   images: string[];
   isEnabled: boolean;
 }

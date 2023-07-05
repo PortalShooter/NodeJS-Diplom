@@ -1,11 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { IUser, Role } from '../interfaces/IUser';
 
 export type UserDocument = User & Document;
 
 @Schema()
-export class User {
+export class User implements IUser {
+  public id: Types.ObjectId;
+
   @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })
   @Prop({ required: true, unique: true })
   public email: string;
@@ -24,7 +27,7 @@ export class User {
 
   @ApiProperty({ example: 'client', description: 'Роль пользователя' })
   @Prop({ default: 'client' })
-  public role: string;
+  public role: Role;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

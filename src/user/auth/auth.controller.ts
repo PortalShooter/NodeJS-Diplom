@@ -10,8 +10,8 @@ import {
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDtoRequest } from 'src/user/dto/login.dto';
+import { RegisterUserDto } from '../dto/register-user.dto';
 
 @ApiTags('Авторизация')
 @Controller('api')
@@ -60,7 +60,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiResponse({ status: 200 })
   @Post('/client/register')
-  register(@Req() req: Request, @Body() body: CreateUserDto) {
+  register(@Req() req: Request, @Body() body: RegisterUserDto) {
     if (!req.cookies?.access_token) {
       return this.authService.register(body);
     }
