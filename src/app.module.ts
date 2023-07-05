@@ -7,7 +7,7 @@ import { SupportChatModule } from './support-chat/support-chat.module';
 import { FileModule } from './file/file.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
-import { EventsModule } from './events/events.module';
+import { ChatModule } from './support-chat/chat/chat.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { EventsModule } from './events/events.module';
     ReservationModule,
     SupportChatModule,
     FileModule,
-    EventsModule,
+    ChatModule,
   ],
 })
 export class AppModule {}

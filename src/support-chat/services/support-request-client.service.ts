@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { Message, MessageDocument } from '../schemas/message.schema';
 import { MarkMessagesAsReadDto } from '../interfaces/MarkMessagesAsReadDto';
 import { ISupportRequestClientService } from '../interfaces/services/ISupportRequestClientService';
+import { ChatGateway } from '../chat/chat.gateway';
 
 @Injectable()
 export class SupportRequestClientService
@@ -17,8 +18,9 @@ export class SupportRequestClientService
   constructor(
     @InjectModel(SupportRequest.name)
     private supportRequestModel: Model<SupportRequestDocument>,
-    @InjectModel(Message.name)
-    private messageModel: Model<MessageDocument>,
+    // @InjectModel(Message.name)
+    // private messageModel: Model<MessageDocument>,
+    private readonly chatGateway: ChatGateway,
   ) {}
 
   createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
@@ -41,6 +43,9 @@ export class SupportRequestClientService
     // const newArr = await messagesID.map(
     //   async (messageId) => await this.messageModel.findById(messageId),
     // );
+
+    // Отправка события, что сообщения прочитаны
+    this.chatGateway.messagesIsRead(supportRequest.id);
 
     return supportRequest;
   }

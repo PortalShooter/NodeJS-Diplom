@@ -11,7 +11,7 @@
         //   console.log('Identity:', response),
         // );
 
-        socket.emit('message', { test: 'test' }, res => console.log(res));
+        socket.emit('message', { chatId: '' }, res => console.log(res));
       }); 
      
       // socket.on('events', function(data) {

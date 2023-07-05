@@ -10,6 +10,7 @@ import { GetChatListParams } from '../interfaces/GetChatListParams';
 import { ISupportRequestService } from '../interfaces/services/ISupportRequestService';
 import { SendMessageDto } from '../interfaces/SendMessageDto';
 import { ID } from 'src/types';
+import { ChatGateway } from '../chat/chat.gateway';
 
 @Injectable()
 export class SupportRequestService implements ISupportRequestService {
@@ -18,6 +19,7 @@ export class SupportRequestService implements ISupportRequestService {
     private supportRequestModel: Model<SupportRequestDocument>,
     @InjectModel(Message.name)
     private messageModel: Model<MessageDocument>,
+    private readonly chatGateway: ChatGateway,
   ) {}
 
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]> {
@@ -45,6 +47,9 @@ export class SupportRequestService implements ISupportRequestService {
         new: true,
       },
     );
+
+    // this.chatGateway.handleSendMessage();
+
     return newMessage.save();
   }
 
@@ -58,6 +63,8 @@ export class SupportRequestService implements ISupportRequestService {
         messages: true,
       },
     );
+    //TODO тоже как то грамотно вытащить из обращения все сообщения в развернутом виде.
+    //TODO привести к нормальному виду ответа
     // return supportRequestData.messages;
     return [];
   }
@@ -65,6 +72,7 @@ export class SupportRequestService implements ISupportRequestService {
   subscribe(
     handler: (supportRequest: SupportRequest, message: Message) => void,
   ): () => void {
+    // this.chatGateway.messagesIsRead(supportRequest.id);
     throw new Error('Method not implemented.');
   }
 }

@@ -117,6 +117,25 @@ export class ApiSupportChat {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Получение истории сообщений из обращения в техподдержку',
+  })
+  @Get('common/support-requests/:id/messages')
+  async getSupportRequestsHistory(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ) {
+    const user = await this.authService.getUserByToken(
+      req.cookies.access_token,
+    );
+    if (user.role === Role.client || user.role === Role.manager) {
+      return this.supportRequestService.getMessages(id);
+    } else {
+      throw new HttpException('У этого пользователя нет прав', 403);
+    }
+  }
+
   @ApiOperation({
     summary: 'Отправка события, что сообщения прочитаны',
   })

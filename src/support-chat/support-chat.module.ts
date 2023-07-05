@@ -10,6 +10,8 @@ import { AuthModule } from 'src/user/auth/auth.module';
 import { SupportRequestClientService } from './services/support-request-client.service';
 import { SupportRequestEmployeeService } from './services/support-request-employee.service';
 import { SupportRequestService } from './services/support-request.service';
+import { ChatModule } from './chat/chat.module';
+import { ChatGateway } from './chat/chat.gateway';
 // import { ChatGateway } from './gateway/chat.gateway';
 
 @Module({
@@ -24,6 +26,7 @@ import { SupportRequestService } from './services/support-request.service';
     SupportRequestClientService,
     SupportRequestEmployeeService,
     SupportRequestService,
+    ChatGateway,
   ],
   controllers: [ApiSupportChat],
 })
