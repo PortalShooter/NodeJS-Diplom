@@ -11,19 +11,21 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
-import { SupportChatService } from '../support-chat.service';
 import { CreateSupportRequestDto } from '../interfaces/CreateSupportRequestDto';
 import { Request, query } from 'express';
 import { AuthService } from 'src/user/auth/auth.service';
 import { SearchSupportRequestststs } from '../interfaces/SearchSupportRequests';
 import { Role } from 'src/user/interfaces/IUser';
 import { CreateBefore } from '../interfaces/CreatedBefore';
+import { SupportChatService } from '../services/support-chat.service';
+import { SupportRequestClientService } from '../services/support-request-client.service';
 
 @ApiTags('Чат с техподдрежкой')
 @Controller('api')
 export class ApiSupportChat {
   constructor(
     private readonly supportChatService: SupportChatService,
+    private readonly supportRequestClientService: SupportRequestClientService,
     private readonly authService: AuthService,
   ) {}
 
@@ -40,7 +42,7 @@ export class ApiSupportChat {
 
     // Возвращаю как есть, потому что есть подозрение, что в ТЗ опечатка.
     // В ТЗ сервер должен возвращать такой же массив, как и в получение списка обращений
-    return this.supportChatService.createSupportRequest({
+    return this.supportRequestClientService.createSupportRequest({
       text: body.text,
       user: user.id,
     });
@@ -119,7 +121,7 @@ export class ApiSupportChat {
     );
 
     if (user.role === Role.client || user.role === Role.manager) {
-      return this.supportChatService.markMessagesAsRead({
+      return this.supportRequestClientService.markMessagesAsRead({
         user: user.id,
         supportRequest: id,
         createdBefore: new Date(body.createdBefore), //TODO пока не понятно как этим пользоваться

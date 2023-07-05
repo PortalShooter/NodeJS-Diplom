@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSupportRequestDto } from './interfaces/CreateSupportRequestDto';
+import { CreateSupportRequestDto } from '../interfaces/CreateSupportRequestDto';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   SupportRequest,
   SupportRequestDocument,
-} from './schemas/support-request.schema';
-import { Model } from 'mongoose';
-import { SearchSupportRequestststs } from './interfaces/SearchSupportRequests';
-import { Message, MessageDocument } from './schemas/message.schema';
-import { SendMessageDto } from './interfaces/SendMessageDto';
-import { MarkMessagesAsReadDto } from './interfaces/MarkMessagesAsReadDto';
+} from '../schemas/support-request.schema';
+import { Model, Types } from 'mongoose';
+import { SearchSupportRequestststs } from '../interfaces/SearchSupportRequests';
+import { Message, MessageDocument } from '../schemas/message.schema';
+import { SendMessageDto } from '../interfaces/SendMessageDto';
+import { MarkMessagesAsReadDto } from '../interfaces/MarkMessagesAsReadDto';
 
 @Injectable()
 export class SupportChatService {
@@ -19,13 +19,6 @@ export class SupportChatService {
     @InjectModel(Message.name)
     private messageModel: Model<MessageDocument>,
   ) {}
-
-  createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
-    return new this.supportRequestModel({
-      user: data.user,
-      createdAt: new Date(),
-    }).save();
-  }
 
   findAllSupportRequestByUser(
     id: string,
@@ -49,7 +42,7 @@ export class SupportChatService {
     await this.supportRequestModel.findByIdAndUpdate(
       data.supportRequest,
       {
-        $push: { messages: newMessage.id },
+        $push: { messages: new Types.ObjectId(newMessage.id) },
       },
       {
         new: true,
@@ -57,9 +50,4 @@ export class SupportChatService {
     );
     return newMessage.save();
   }
-
-  markMessagesAsRead(params: MarkMessagesAsReadDto) {
-    return { success: true };
-  }
-  //   getUnreadCount(supportRequest: string): Promise<Message[]>;
 }

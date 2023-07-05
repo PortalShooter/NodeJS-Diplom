@@ -1,7 +1,7 @@
-import { GetChatListParams } from './GetChatListParams';
-import { Message } from './Message';
-import { SendMessageDto } from './SendMessageDto';
-import { SupportRequest } from './SupportRequest';
+import { GetChatListParams } from '../GetChatListParams';
+import { Message } from '../Message';
+import { SendMessageDto } from '../SendMessageDto';
+import { SupportRequest } from '../SupportRequest';
 
 export interface ISupportRequestService {
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]>;

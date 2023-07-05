@@ -1,5 +1,5 @@
-import { MarkMessagesAsReadDto } from './MarkMessagesAsReadDto';
-import { Message } from './Message';
+import { MarkMessagesAsReadDto } from '../MarkMessagesAsReadDto';
+import { Message } from '../Message';
 
 export interface ISupportRequestEmployeeService {
   markMessagesAsRead(params: MarkMessagesAsReadDto);

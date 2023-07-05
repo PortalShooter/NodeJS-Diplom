@@ -17,7 +17,7 @@ export class SupportRequest {
   @Prop({ default: [] })
   public messages: Message[];
 
-  @Prop({ default: false })
+  @Prop({ default: true })
   public isActive: boolean;
 }
 

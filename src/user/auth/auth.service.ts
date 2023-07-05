@@ -37,10 +37,7 @@ export class AuthService {
       );
     }
 
-    const passwordHash: string = await bcrypt.hash(
-      userDto.password,
-      this.configService.get('KeyHashPassword'),
-    );
+    const passwordHash: string = await bcrypt.hash(userDto.password, 5);
 
     const createUser = await this.userService.create({
       ...userDto,
