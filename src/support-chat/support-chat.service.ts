@@ -46,9 +46,15 @@ export class SupportChatService {
       sentAt: new Date(),
       text: data.text,
     });
-    this.supportRequestModel.findByIdAndUpdate(data.supportRequest, {
-      $push: { messages: newMessage.id },
-    });
+    await this.supportRequestModel.findByIdAndUpdate(
+      data.supportRequest,
+      {
+        $push: { messages: newMessage.id },
+      },
+      {
+        new: true,
+      },
+    );
     return newMessage.save();
   }
 

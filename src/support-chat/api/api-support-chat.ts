@@ -79,6 +79,9 @@ export class ApiSupportChat {
     return this.supportChatService.findAllSupportRequestByUser(user.id, query);
   }
 
+  // В ТЗ написано, что в ответ должен вернуться массв сообщений, что противоречит ISupportRequestService.
+  // По нему я должен вернуть одно сообщение
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Отправка сообщения',
   })
