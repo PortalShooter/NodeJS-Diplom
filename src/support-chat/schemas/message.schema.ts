@@ -4,7 +4,7 @@ import { Document, Types } from 'mongoose';
 export type MessageDocument = Message & Document;
 
 @Schema()
-export class Message {
+export class Message implements Message {
   @Prop({ required: true })
   public author: Types.ObjectId;
 

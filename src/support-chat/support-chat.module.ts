@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { SupportChatService } from './services/support-chat.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Message, MessageSchema } from './schemas/message.schema';
 import {
@@ -22,7 +21,6 @@ import { SupportRequestService } from './services/support-request.service';
     AuthModule,
   ],
   providers: [
-    SupportChatService,
     SupportRequestClientService,
     SupportRequestEmployeeService,
     SupportRequestService,

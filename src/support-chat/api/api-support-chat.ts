@@ -12,19 +12,19 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 import { CreateSupportRequestDto } from '../interfaces/CreateSupportRequestDto';
-import { Request, query } from 'express';
+import { Request } from 'express';
 import { AuthService } from 'src/user/auth/auth.service';
 import { SearchSupportRequestststs } from '../interfaces/SearchSupportRequests';
 import { Role } from 'src/user/interfaces/IUser';
 import { CreateBefore } from '../interfaces/CreatedBefore';
-import { SupportChatService } from '../services/support-chat.service';
 import { SupportRequestClientService } from '../services/support-request-client.service';
+import { SupportRequestService } from '../services/support-request.service';
 
 @ApiTags('Чат с техподдрежкой')
 @Controller('api')
 export class ApiSupportChat {
   constructor(
-    private readonly supportChatService: SupportChatService,
+    private readonly supportRequestService: SupportRequestService,
     private readonly supportRequestClientService: SupportRequestClientService,
     private readonly authService: AuthService,
   ) {}
@@ -61,7 +61,12 @@ export class ApiSupportChat {
       req.cookies.access_token,
     );
 
-    return this.supportChatService.findAllSupportRequestByUser(user.id, query);
+    return this.supportRequestService.findSupportRequests({
+      user: user.id,
+      offset: query.offset,
+      isActive: query.isActive,
+      limit: query.limit,
+    });
   }
 
   // TODO допилить корректный ответ
@@ -78,7 +83,12 @@ export class ApiSupportChat {
       req.cookies.access_token,
     );
 
-    return this.supportChatService.findAllSupportRequestByUser(user.id, query);
+    return this.supportRequestService.findSupportRequests({
+      user: user.id,
+      offset: query.offset,
+      isActive: query.isActive,
+      limit: query.limit,
+    });
   }
 
   // В ТЗ написано, что в ответ должен вернуться массв сообщений, что противоречит ISupportRequestService.
@@ -97,7 +107,7 @@ export class ApiSupportChat {
       req.cookies.access_token,
     );
     if (user.role === Role.client || user.role === Role.manager) {
-      return this.supportChatService.sendMessage({
+      return this.supportRequestService.sendMessage({
         author: user.id,
         text: body.text,
         supportRequest: id,
