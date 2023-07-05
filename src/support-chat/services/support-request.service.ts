@@ -49,15 +49,17 @@ export class SupportRequestService implements ISupportRequestService {
   }
 
   async getMessages(supportRequest: ID): Promise<Message[]> {
-    try {
-      const request = await this.supportRequestModel.findOne({
-        id: supportRequest.toString(),
-      });
-
-      return [];
-    } catch (err) {
-      return [];
-    }
+    await this.supportRequestModel.findById(
+      {
+        id: supportRequest,
+      },
+      {
+        _id: false,
+        messages: true,
+      },
+    );
+    // return supportRequestData.messages;
+    return [];
   }
 
   subscribe(

@@ -8,9 +8,12 @@ import {
 import { Model } from 'mongoose';
 import { Message, MessageDocument } from '../schemas/message.schema';
 import { MarkMessagesAsReadDto } from '../interfaces/MarkMessagesAsReadDto';
+import { ISupportRequestEmployeeService } from '../interfaces/services/ISupportRequestEmployeeService';
 
 @Injectable()
-export class SupportRequestEmployeeService {
+export class SupportRequestEmployeeService
+  implements ISupportRequestEmployeeService
+{
   constructor(
     @InjectModel(SupportRequest.name)
     private supportRequestModel: Model<SupportRequestDocument>,

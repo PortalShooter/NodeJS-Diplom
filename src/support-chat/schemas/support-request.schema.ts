@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Message } from '../interfaces/Message';
+import { ID } from 'src/types';
 
 export type SupportRequestDocument = SupportRequest & Document;
 
 @Schema()
-export class SupportRequest {
-  public id: string;
+export class SupportRequest implements SupportRequest {
+  public id: ID;
 
   @Prop({ required: true })
   public user: Types.ObjectId;

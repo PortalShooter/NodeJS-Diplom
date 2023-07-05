@@ -74,7 +74,7 @@ export class ApiSupportChat {
   @ApiOperation({
     summary: 'Получение списка обращений в поддержку для менеджера',
   })
-  @Get('client/support-requests/')
+  @Get('manager/support-requests/')
   async getSupportRequestsByManager(
     @Req() req: Request,
     @Query() query: SearchSupportRequestststs, // может стоит переделать тип на GetChatListParams, но перед этим дополнив его нужными параметрами,
