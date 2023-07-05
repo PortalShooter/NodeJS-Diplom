@@ -10,8 +10,7 @@ export class UserService implements IUserService {
   constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
   create(data: Partial<User>) {
-    const user = new this.UserModel(data);
-    return user.save();
+    return this.UserModel.create(data);
   }
 
   findById(id: string): Promise<User> {
@@ -22,18 +21,21 @@ export class UserService implements IUserService {
     return this.UserModel.findOne({ email });
   }
 
-  //TODO При поиске IUserService.findAll() поля email, name и contactPhone должны проверяться на частичное совпадение.
-  findAll(params: SearchUserParams): Promise<User[]> {
-    return this.UserModel.find(
-      {},
-      // { $text: { $search: params.email ?? '' } },
-      // {
-      //   filter: {
-      //     email: { $regex: /^``/ },
-      //     // as: 'item',
-      //     // cond: { $gte: ['$$item.price', 100] },
-      //   },
-      // },
-    );
+  async findAll(params: SearchUserParams): Promise<User[]> {
+    const filter: { [k: string]: any } = {};
+
+    if (params.name) filter.name = params.name;
+
+    if (params.email) filter.email = params.email;
+
+    if (params.contactPhone) filter.contactPhone = params.contactPhone;
+
+    if (params.limit && params.offset) {
+      return await this.UserModel.find(filter)
+        .skip(params.offset)
+        .limit(params.limit);
+    } else {
+      return await this.UserModel.find(filter);
+    }
   }
 }
