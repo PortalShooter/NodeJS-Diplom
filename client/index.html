@@ -6,23 +6,29 @@
       socket.on('connect', function() {
         console.log('Connected');
 
-        // socket.emit('events', { test: 'test' });
-        // socket.emit('identity', 0, response =>
-        //   console.log('Identity:', response),
-        // );
 
-        socket.emit('message', { chatId: '' }, res => console.log(res));
+        // Весь этот блок это вход в чат, а значит, что можно смело помечать все сообщения прочитанными
+        // Сообщаем серверу, что хотим подключиться к чату
+        socket.emit('subscribeToChat', {
+          chatId: '64a5559a300864196c5c661c',
+          userId: '64a5549c300864196c5c660c'
+        } , res => {
+          // Прослушиваем определенную комнату
+          socket.on(res, (data) => {
+            console.log('Новое сообщение', data)
+          })
+        });
+
+        // Подписка на сообщения из чата техподдержки
+        // socket.send(JSON.stringify({
+        //   message: "subscribeToChat",
+        //   payload: {
+        //     chatId: '64a5559a300864196c5c661c',
+        //   }
+        // }));
+    
       }); 
-     
-      // socket.on('events', function(data) {
-      //   console.log('event', data);
-      // });
-      // socket.on('exception', function(data) {
-      //   console.log('event', data);
-      // });
-      // socket.on('disconnect', function() {
-      //   console.log('Disconnected');
-      // });
+    
     </script>
   </head>
 

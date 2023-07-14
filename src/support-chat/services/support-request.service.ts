@@ -47,9 +47,9 @@ export class SupportRequestService implements ISupportRequestService {
         new: true,
       },
     );
-
-    // this.chatGateway.handleSendMessage();
-
+    // Уведомляем всех, кто подписан на чат.
+    this.chatGateway.handleSendMessage(data.supportRequest, newMessage);
+    // TODO отдавать автора не в виде id, а с параметрами id и name
     return newMessage.save();
   }
 

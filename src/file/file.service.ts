@@ -7,8 +7,16 @@ import * as uuid from 'uuid';
 export class FileService {
   createFile(file): string {
     try {
-      const fileExtension = file.originalname.split('.').pop();
-      const fileName = uuid.v4() + fileExtension;
+      const fileExtension = file.originalname.match(/.(jpg|jpeg|png|gif)$/);
+
+      if (!fileExtension) {
+        throw new HttpException(
+          'Only image files are allowed!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const fileName = uuid.v4() + fileExtension[1];
       const filePath = path.resolve(__dirname, '..', 'static');
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });

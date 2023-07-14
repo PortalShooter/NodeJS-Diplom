@@ -150,11 +150,15 @@ export class ApiSupportChat {
     );
 
     if (user.role === Role.client || user.role === Role.manager) {
-      return this.supportRequestClientService.markMessagesAsRead({
+      await this.supportRequestClientService.markMessagesAsRead({
         user: user.id,
         supportRequest: id,
         createdBefore: new Date(body.createdBefore), //TODO пока не понятно как этим пользоваться
       });
+
+      return {
+        success: true,
+      };
     } else {
       throw new HttpException('У этого пользователя нет прав', 403);
     }

@@ -18,8 +18,6 @@ export class SupportRequestClientService
   constructor(
     @InjectModel(SupportRequest.name)
     private supportRequestModel: Model<SupportRequestDocument>,
-    // @InjectModel(Message.name)
-    // private messageModel: Model<MessageDocument>,
     private readonly chatGateway: ChatGateway,
   ) {}
 
