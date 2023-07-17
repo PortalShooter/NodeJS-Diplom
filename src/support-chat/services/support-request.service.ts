@@ -54,21 +54,21 @@ export class SupportRequestService implements ISupportRequestService {
   }
 
   async getMessages(supportRequest: ID): Promise<Message[]> {
-    await this.supportRequestModel.findById(
-      {
-        id: supportRequest,
+    const res = await this.supportRequestModel.findById(supportRequest);
+    const messageListID = res.messages;
+
+    return this.messageModel.find({
+      _id: {
+        $in: messageListID,
       },
-      {
-        _id: false,
-        messages: true,
-      },
-    );
-    //TODO тоже как то грамотно вытащить из обращения все сообщения в развернутом виде.
-    //TODO привести к нормальному виду ответа
-    // return supportRequestData.messages;
-    return [];
+    });
   }
 
+  async readMessage(message: ID) {
+    await this.messageModel.findByIdAndUpdate(message, { readAt: new Date() });
+  }
+
+  // Так и не полнял как это запускать
   subscribe(
     handler: (supportRequest: SupportRequest, message: Message) => void,
   ): () => void {

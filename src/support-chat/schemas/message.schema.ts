@@ -5,6 +5,8 @@ export type MessageDocument = Message & Document;
 
 @Schema()
 export class Message implements Message {
+  public id: Types.ObjectId;
+
   @Prop({ required: true })
   public author: Types.ObjectId;
 
@@ -14,7 +16,7 @@ export class Message implements Message {
   @Prop({ required: true })
   public text: string;
 
-  @Prop()
+  @Prop({ default: null })
   public readAt: Date;
 }
 

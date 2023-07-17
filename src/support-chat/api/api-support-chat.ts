@@ -19,6 +19,7 @@ import { Role } from 'src/user/interfaces/IUser';
 import { CreateBefore } from '../interfaces/CreatedBefore';
 import { SupportRequestClientService } from '../services/support-request-client.service';
 import { SupportRequestService } from '../services/support-request.service';
+import { SupportRequestEmployeeService } from '../services/support-request-employee.service';
 
 @ApiTags('Чат с техподдрежкой')
 @Controller('api')
@@ -26,6 +27,7 @@ export class ApiSupportChat {
   constructor(
     private readonly supportRequestService: SupportRequestService,
     private readonly supportRequestClientService: SupportRequestClientService,
+    private readonly supportRequestEmployeeService: SupportRequestEmployeeService,
     private readonly authService: AuthService,
   ) {}
 
@@ -149,7 +151,7 @@ export class ApiSupportChat {
       req.cookies.access_token,
     );
 
-    if (user.role === Role.client || user.role === Role.manager) {
+    if (user.role === Role.client) {
       await this.supportRequestClientService.markMessagesAsRead({
         user: user.id,
         supportRequest: id,
@@ -159,6 +161,12 @@ export class ApiSupportChat {
       return {
         success: true,
       };
+    } else if (user.role === Role.manager) {
+      await this.supportRequestEmployeeService.markMessagesAsRead({
+        user: user.id,
+        supportRequest: id,
+        createdBefore: new Date(body.createdBefore), //TODO пока не понятно как этим пользоваться
+      });
     } else {
       throw new HttpException('У этого пользователя нет прав', 403);
     }
