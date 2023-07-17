@@ -23,13 +23,23 @@ export class SupportRequestService implements ISupportRequestService {
   ) {}
 
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]> {
-    return this.supportRequestModel
-      .find(
-        { user: params.user, isActive: params.isActive },
-        { createdAt: true, isActive: true }, //TODO как то добавить hasNewMessages
-      )
-      .skip(params.offset)
-      .limit(params.limit);
+    if (params.user) {
+      return this.supportRequestModel
+        .find(
+          { user: params.user, isActive: params.isActive },
+          { createdAt: true, isActive: true }, //TODO как то добавить hasNewMessages
+        )
+        .skip(params.offset)
+        .limit(params.limit);
+    } else {
+      return this.supportRequestModel
+        .find(
+          { isActive: params.isActive },
+          { createdAt: true, isActive: true, user: true }, //TODO как то добавить hasNewMessages
+        )
+        .skip(params.offset)
+        .limit(params.limit);
+    }
   }
 
   async sendMessage(data: SendMessageDto): Promise<Message> {
@@ -49,7 +59,6 @@ export class SupportRequestService implements ISupportRequestService {
     );
     // Уведомляем всех, кто подписан на чат.
     this.chatGateway.handleSendMessage(data.supportRequest, newMessage);
-    // TODO отдавать автора не в виде id, а с параметрами id и name
     return newMessage.save();
   }
 

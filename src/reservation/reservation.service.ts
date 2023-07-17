@@ -7,6 +7,8 @@ import { HotelRoomService } from 'src/hotel/hotel.service';
 import { IReservationService } from './interfaces/IReservationService';
 import { ReservationSearchOptions } from './interfaces/ReservationSearchOptions';
 import { ID } from 'src/types';
+import { HotelRoom } from 'src/hotel/schemas/hotel-room.schema';
+import { Hotel } from 'src/hotel/schemas/hotel.schema';
 
 @Injectable()
 export class ReservationService implements IReservationService {
@@ -41,14 +43,27 @@ export class ReservationService implements IReservationService {
 
     if (filter.dateEnd) searchFilter.dateEnd = filter.dateEnd;
 
-    return await this.reservationModel
+    return this.reservationModel
       .find(searchFilter)
       .populate('hotelId', 'title description')
       .populate('roomId', 'images description');
 
+    // Попробовал ваш вариант, но исход такой же. hotel и hotelRoom возвращаются в виде id
     // return this.reservationModel
-    //   .find({ userId }, { userId: false })
-    //   ;
+    //   .find(searchFilter)
+    //   .select('_id dateStart dateEnd roomId hotelId')
+    //   .populate<{ roomId: HotelRoom; hotelId: Hotel }>([
+    //     { path: 'roomId', select: '-_id description images' },
+    //     { path: 'hotelId', select: '-_id title description' },
+    //   ])
+    //   .then((reservations) =>
+    //     reservations.map((reservation) => ({
+    //       startDate: reservation.dateStart,
+    //       endDate: reservation.dateEnd,
+    //       hotelRoom: reservation.roomId,
+    //       hotel: reservation.hotelId,
+    //     })),
+    //   );
   }
 
   getReservationsById(id: ID): Promise<Reservation> {

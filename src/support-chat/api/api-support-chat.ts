@@ -85,12 +85,21 @@ export class ApiSupportChat {
       req.cookies.access_token,
     );
 
-    return this.supportRequestService.findSupportRequests({
-      user: user.id,
-      offset: query.offset,
-      isActive: query.isActive,
-      limit: query.limit,
-    });
+    if (user.role === Role.client) {
+      return this.supportRequestService.findSupportRequests({
+        user: user.id,
+        offset: query.offset,
+        isActive: query.isActive,
+        limit: query.limit,
+      });
+    } else if (user.role === Role.manager) {
+      return this.supportRequestService.findSupportRequests({
+        user: null,
+        offset: query.offset,
+        isActive: query.isActive,
+        limit: query.limit,
+      });
+    }
   }
 
   // В ТЗ написано, что в ответ должен вернуться массв сообщений, что противоречит ISupportRequestService.

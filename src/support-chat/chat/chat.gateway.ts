@@ -21,12 +21,6 @@ export class ChatGateway {
   @SubscribeMessage('subscribeToChat')
   handleSubscribeToChat(client: any, data) {
     const { userId, chatId } = data;
-
-    // TODO добавить сюда чтение всех сообщений именно этим пользователем.
-    // то есть помечать все сообщения прочитанными если id сообщения не совпадает с пользователем.
-    // хотя по ТЗ это делается отдельным запросом.
-
-    console.log(6666, chatId);
     return `chat-${chatId}`;
   }
 
